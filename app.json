@@ -1,0 +1,12 @@
+{
+  "name": "react-mobile-flashcards",
+  "displayName": "react-mobile-flashcards",
+  "expo": {
+    "name": "react-mobile-flashcards",
+    "slug": "react-mobile-flashcards",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
