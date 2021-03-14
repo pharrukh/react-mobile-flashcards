@@ -3,11 +3,11 @@ import * as Permissions from 'expo-permissions';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const NOTIFICATION_KEY = 'DeckApp:notifications'
+export const DAILY_QUIZ_KEY = 'DeckApp:daily-quiz'
 
 export function getDeckTitle(str) {
   return str.replace(/\W/g, '-')
 }
-
 
 export const INITIAL_DATA = {
   Uzbekistan: {
@@ -84,47 +84,45 @@ export function clearLocalNotification() {
 
 function createNotification() {
   return {
-    content: {
-      title: "Time's up!",
-      body: 'Change sides!',
+    title: 'Play a quiz!',
+    body: "👋 don't forget to take a quiz today!",
+    ios: {
+      sound: true,
     },
-
-    // body: "👋 don't forget to take a quiz today!",
-    // ios: {
-    //   sound: true,
-    // },
-    // android: {
-    //   sound: true,
-    //   priority: 'high',
-    //   sticky: false,
-    //   vibrate: true,
-    // }
-    trigger: { seconds: 1, repeats: true }
+    android: {
+      sound: true,
+      priority: 'high',
+      sticky: false,
+      vibrate: true,
+    }
   }
 }
 
 export function setLocalNotification() {
-  AsyncStorage.getItem(NOTIFICATION_KEY)
-    .then(JSON.parse)
-    .then((data) => {
-      if (data === null) {
-        Permissions.askAsync(Permissions.NOTIFICATIONS)
-          .then(({ status }) => {
-            if (status === 'granted') {
-              Notifications.cancelAllScheduledNotificationsAsync()
-              Notifications.scheduleNotificationAsync(
-                {
-                  content: {
-                    title: "You've got mail! 📬",
-                    body: 'Here is the notification body',
-                    data: { data: 'goes here' },
-                  },
-                }
-              )
 
-              AsyncStorage.setItem(NOTIFICATION_KEY, JSON.stringify(true))
+  AsyncStorage.getItem(DAILY_QUIZ_KEY)
+    .then(JSON.parse)
+    .then(didTakeQuiz => {
+      if (!didTakeQuiz) {
+        return AsyncStorage.getItem(NOTIFICATION_KEY)
+          .then(JSON.parse)
+          .then((data) => {
+            if (!data) {
+              Permissions.askAsync(Permissions.NOTIFICATIONS)
+                .then(({ status }) => {
+                  if (status === 'granted') {
+                    Notifications.cancelAllScheduledNotificationsAsync()
+
+                    Notifications.scheduleNotificationAsync(
+                      createNotification(),
+                    )
+
+                    AsyncStorage.setItem(NOTIFICATION_KEY, JSON.stringify(true))
+                  }
+                })
             }
           })
       }
     })
+
 }

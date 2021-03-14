@@ -1,10 +1,8 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Button, TextInput, ScrollView } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { Text, View, Button, TextInput } from 'react-native';
 import { connect } from 'react-redux'
 import { addCard } from '../actions'
+import { mainTextStyle, inputTextStyle, containerStyle } from '../utils/style';
 
 class AddCard extends Component {
   state = {
@@ -21,17 +19,19 @@ class AddCard extends Component {
     const { navigation, dispatch, currentDeck } = this.props
 
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Add Card to {currentDeck}</Text>
+      <View style={containerStyle}>
+        <Text style={{ ...mainTextStyle, color: 'black' }}>Add Card to {currentDeck}</Text>
         <TextInput
-          style={styles.input}
+          style={inputTextStyle}
           onChangeText={(question) => this.setState({ question })}
           value={this.state.question}
+          placeholder="The sky is blue"
         />
         <TextInput
-          style={styles.input}
+          style={inputTextStyle}
           onChangeText={(answer) => this.setState({ answer })}
           value={this.state.answer}
+          placeholder="True"
         />
         <Button title='add' onPress={() => {
           dispatch(addCard({ question: this.state.question, answer: this.state.answer }, currentDeck))
@@ -42,16 +42,6 @@ class AddCard extends Component {
   }
 
 }
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 function mapStateToProps({ decks }) {
   return { currentDeck: decks.currentDeck }

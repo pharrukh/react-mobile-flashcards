@@ -1,10 +1,7 @@
-;
-import { StatusBar } from 'expo-status-bar';
-import React, { Component } from 'react';
-import { StyleSheet, Text, View, Button, TextInput, ScrollView } from 'react-native';
-import { connect } from 'react-redux';
-import { loadData } from '../actions'
-
+import React, { Component } from 'react'
+import { Text, View, Button, } from 'react-native'
+import { connect } from 'react-redux'
+import { containerStyle, mainTextStyle, secondaryTextStyle } from '../utils/style'
 class Deck extends Component {
   componentWillUnmount() {
     this.props.route.params.onBack()
@@ -12,16 +9,15 @@ class Deck extends Component {
 
   render() {
     if (!this.props.decks || !this.props.currentDeck)
-      return <View><Text>{JSON.stringify(this.props, 2, null)}</Text></View>
+      return <View><Text></Text></View>
 
     const { decks, currentDeck } = this.props
     const { title, questions } = decks[currentDeck]
 
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Deck {this.props.currentDeck}</Text>
-        <Text>{title}</Text>
-        <Text>{questions.length} cards</Text>
+      <View style={containerStyle}>
+        <Text style={{ ...mainTextStyle, color: 'black' }}>Deck {this.props.currentDeck}</Text>
+        <Text style={secondaryTextStyle}>{questions.length} cards</Text>
         <Button
           title="Go to Add Card"
           onPress={() => this.props.navigation.navigate('Add Card', { onBack: () => this.props.route.params.onBack() })}

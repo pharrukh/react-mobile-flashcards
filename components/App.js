@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import NewDeck from './NewDeck'
@@ -24,7 +24,15 @@ export default class App extends Component {
       <Provider store={createStore(reducers)}>
         <NavigationContainer>
           <Stack.Navigator initialRouteName="Home">
-            <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="Home" component={Home} options={({ navigation }) => ({
+              headerTitle: () => <Text></Text>,
+              headerRight: () => {
+                return <Text
+                  style={{ marginRight: 10, color: '#246B8B', fontSize: 25 }}
+                  onPress={() => navigation.navigate('New Deck')}>new deck</Text>
+              }
+            })
+            } />
             <Stack.Screen name="New Deck" component={NewDeck} />
             <Stack.Screen name="Deck" component={Deck} />
             <Stack.Screen name="Add Card" component={AddCard} />

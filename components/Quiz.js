@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Text, View, Button } from 'react-native';
 import { connect } from 'react-redux';
+import { containerStyle, mainTextStyle, secondaryTextStyle } from '../utils/style';
+import { startQuiz } from '../actions'
 
 function getButtonTitle(currentMode) {
   return getOppositeValue(currentMode)
@@ -25,23 +27,26 @@ class Quiz extends Component {
     this.setState({ ...this.state, index: this.state.index + 1, answers: [...this.state.answers, answer] })
   }
 
+  componentDidMount() {
+    this.props.dispatch(startQuiz())
+  }
+
   render() {
-    const style = { flex: 1, alignItems: 'center', justifyContent: 'center' }
+
     const { questions, currentDeck } = this.props
 
     if (this.state.index === questions.length) {
-      return <View style={style}>
-        <Text>You answered all questions 👍</Text>
+      return <View style={containerStyle}>
+        <Text style={{ ...mainTextStyle, color: 'black' }}>You answered all questions 👍</Text>
         <Text>Here are the results:</Text>
-        <Text>{questions.map((question, i) => `${question.question} (${question.answer}): ${this.state.answers[i]}\n`)}</Text>
+        <Text>{questions.map((question, i) => `${i + 1}) ${question.question.substring(0, 10)}... (${question.answer}): ${this.state.answers[i]}\n`)}</Text>
       </View>
     }
 
     return (
-      <View style={style}>
-        <Text>{currentDeck}</Text>
-        <Text>{this.state.index + 1}/{questions.length}</Text>
-        <Text>{questions[this.state.index][this.state.mode]}</Text>
+      <View style={containerStyle}>
+        <Text style={secondaryTextStyle}>{currentDeck} ({this.state.index + 1}/{questions.length})</Text>
+        <Text style={{ ...mainTextStyle, color: 'black' }}>{questions[this.state.index][this.state.mode]}</Text>
         <Button title={getButtonTitle(this.state.mode)} onPress={() => this.updateMode()} />
         {this.state.mode === 'question' ?
           <View>
