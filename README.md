@@ -1,5 +1,12 @@
 # react-mobile-flashcards
 
+expo and iOS were used for implementation
+Notification feature was not tested :(
+
+## demo
+
+![demo](https://github.com/pharrukh/react-mobile-flashcards/blob/master/demo.gif)
+
 ## requirements
 
 Can be found [here](https://github.com/pharrukh/react-mobile-flashcards/blob/master/requirements.png).
