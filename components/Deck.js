@@ -24,7 +24,7 @@ class Deck extends Component {
         />
         <Button
           title="Go to Quiz"
-          onPress={() => this.props.navigation.navigate('Quiz')}
+          onPress={() => this.props.navigation.navigate('Quiz', { onBack: () => this.props.route.params.onBack() })}
         />
         <View>
         </View>

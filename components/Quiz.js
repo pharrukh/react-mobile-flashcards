@@ -23,6 +23,10 @@ class Quiz extends Component {
     this.setState({ ...this.state, mode: getOppositeValue(this.state.mode) })
   }
 
+  restartQuiz = () => {
+    this.setState({ ...this.state, index: 0, answers: [] })
+  }
+
   moveToNextQuestion = (answer) => {
     this.setState({ ...this.state, index: this.state.index + 1, answers: [...this.state.answers, answer] })
   }
@@ -31,15 +35,23 @@ class Quiz extends Component {
     this.props.dispatch(startQuiz())
   }
 
+  componentWillUnmount() {
+    this.props.route.params.onBack()
+  }
+
   render() {
 
-    const { questions, currentDeck } = this.props
+    const { questions, currentDeck, navigation } = this.props
+    const length = questions.length
 
     if (this.state.index === questions.length) {
       return <View style={containerStyle}>
         <Text style={{ ...mainTextStyle, color: 'black' }}>You answered all questions 👍</Text>
         <Text>Here are the results:</Text>
-        <Text>{questions.map((question, i) => `${i + 1}) ${question.question.substring(0, 10)}... (${question.answer}): ${this.state.answers[i]}\n`)}</Text>
+        <Text>{questions.map((question, i) => `${i + 1}) ${question.question.substring(0, 10)}... (${question.answer}): ${this.state.answers[i]} ${getEmoji(this.state.answers[i], question.answer)}\n`)}</Text>
+        <Text>You have answered {getNumberOfCorrectAnswers(questions, this.state.answers)} out of {length} correctly</Text>
+        <Button title="Restart Quiz" onPress={() => this.restartQuiz()} />
+        <Button title="Back to Deck" onPress={() => navigation.navigate('Home')} />
       </View>
     }
 
@@ -62,8 +74,20 @@ class Quiz extends Component {
   }
 }
 
+
 function mapStateToProps({ decks }) {
   return { currentDeck: decks.currentDeck, questions: decks.decks[decks.currentDeck].questions }
 }
+
+function getEmoji(actual, expected) {
+  return actual === expected ? '✅' : '❌'
+}
+
+function getNumberOfCorrectAnswers(questions, answers) {
+  let numberOfCorrectAnswers = 0
+  questions.forEach(({ answer }, i) => answer === answers[i] ? numberOfCorrectAnswers++ : null)
+  return numberOfCorrectAnswers
+}
+
 
 export default connect(mapStateToProps)(Quiz)

@@ -5,6 +5,8 @@ Notification feature was not tested :(
 
 ## demo
 
+The demo of the fix can be found [here](https://github.com/pharrukh/react-mobile-flashcards/blob/master/fix-demo.gif)
+
 Demo can be found [here](https://github.com/pharrukh/react-mobile-flashcards/blob/master/demo.gif)
 
 ## requirements
